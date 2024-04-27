@@ -1,0 +1,30 @@
+{
+    "files.autoSave": "off",
+    "[python]": {
+      "editor.defaultFormatter": "charliermarsh.ruff",
+      "editor.formatOnSave": true,
+      "editor.codeActionsOnSave": {
+        "source.fixAll": "explicit",
+        "source.organizeImports": "explicit"
+      }
+    },
+    "python.analysis.typeCheckingMode": "basic",
+    "python.testing.pytestArgs": ["tests"],
+    "python.testing.unittestEnabled": false,
+    "python.testing.pytestEnabled": true,
+    "extensions.ignoreRecommendations": true,
+    "autoDocstring.docstringFormat": "google",
+    "git.autofetch": "all",
+    "remote.autoForwardPortsFallback": 0,
+    "sqltools.connections": [
+        {
+            "name": "ddd-book",
+            "server": "localhost",
+            "port": 15432,
+            "driver": "PostgreSQL",
+            "database": "postgres",
+            "username": "postgres",
+            "password": "postgres"
+        }
+    ]
+  }
