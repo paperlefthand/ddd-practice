@@ -1,5 +1,3 @@
-# %%
-
 from pydantic import BaseModel, Field
 
 NAME_PATTERN = r"^[A-Z][a-z]+$"
@@ -11,7 +9,7 @@ class FullName(BaseModel, frozen=True):
 
     def equals(self, other: "FullName") -> bool:
         if not isinstance(other, FullName):
-            raise TypeError("other is not FullName")
+            raise TypeError("other is not an instance of FullName")
         else:
             return (
                 self.first_name == other.first_name
@@ -23,11 +21,3 @@ class FullName(BaseModel, frozen=True):
 
     def __str__(self):
         return f"{self.first_name} {self.last_name}"
-
-
-p = FullName(first_name="Taro", last_name="Yamada")
-print(p.model_dump())
-q = p.update_last_name(last_name="Suzuki")
-print(q.model_dump())
-
-# %%
