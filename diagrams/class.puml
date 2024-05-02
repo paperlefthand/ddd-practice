@@ -1,0 +1,71 @@
+@startuml
+
+!define valueobject class
+
+skinparam classAttributeIconSize 0
+skinparam style strictuml
+
+' Value Objects
+valueobject UserId {
+    + value : String
+}
+
+valueobject UserName {
+    + value : String
+}
+
+valueobject MailAddress {
+    + value : String
+}
+
+' Entity
+class User {
+    + userId : UserId
+    + userName : UserName
+    + email : MailAddress
+}
+
+' Domain Service
+class UserService {
+    + exists(user : User) : boolean
+}
+
+' Repository Interface
+interface IUserRepository {
+    + save(user : User) : void
+    + get(userId : UserID) : User?
+    + update(user : User) : void
+    + delete(user : User) : void
+    + findById(userId : UserID) : User?
+}
+
+Interface IUserFactory {
+    +create(name: UserName): User
+}
+
+
+
+' Application Service
+class UserApplicationService {
+    - repository : IUserRepository
+    + registerUser(userName : String, email : String) : UserID
+    + updateUser(userId : UserID, userName : String, email : String) : void
+    + deleteUser(userId : UserID) : void
+}
+
+UserFactory --> IUserFactory
+UserRepository --> IUserRepository
+
+UserApplicationService ..> IUserRepository : uses
+UserApplicationService ..> UserService : uses
+
+UserService ..> User : uses
+UserService ..> IUserRepository : uses
+
+User o-- UserName
+User o-- UserId
+User o-- MailAddress
+
+
+@enduml
+

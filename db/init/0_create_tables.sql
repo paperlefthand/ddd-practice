@@ -6,6 +6,7 @@
 -- nameの長さ=ユーザ名の仕様で決められた制限文字数
 CREATE TABLE IF NOT EXISTS "user" (
     id VARCHAR(32) NOT NULL,
-    name VARCHAR(32) NOT NULL,
+    name VARCHAR(20) NOT NULL,
+    email VARCHAR(50) UNIQUE NOT NULL,
     PRIMARY KEY (id)
 );

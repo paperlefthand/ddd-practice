@@ -8,10 +8,12 @@ python = "^3.12"
 pydantic = "^2.7.1"
 sqlalchemy = "^2.0.29"
 psycopg2-binary = "^2.9.9"
+injector = "^0.21.0"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.1.2"
 ipykernel = "^6.29.4"
+pytest-cov = "^5.0.0"
 
 [build-system]
 requires = ["poetry-core"]
@@ -19,8 +21,8 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.pytest.ini_options]
 pythonpath = "src"
-# addopts = "--cov --cov-branch -s -v"
-addopts = "-v"
+addopts = "--cov --cov-branch -s -v"
+# addopts = "-v"
 testpaths = [
     "tests",
 ]
