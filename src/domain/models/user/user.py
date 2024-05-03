@@ -1,5 +1,5 @@
-from mail_address import MailAddress
-from pydantic import BaseModel, Field
+from application.user.mail_address import MailAddress
+from pydantic import BaseModel, Field, PrivateAttr
 
 
 class UserId(BaseModel, frozen=True):
@@ -18,10 +18,14 @@ class UserName(BaseModel, frozen=True):
     value: str = Field(min_length=3, max_length=20)
 
 
-class User:
+class User(BaseModel):
     """ユーザエンティティ
-    - HACK: コンストラクタの引数名とgetter/setterのプロパティ名が異なると嫌なのでPydanticにしていない.
+    - ユーザIDはimmutable, ユーザ名とメールアドレスは(setterではなく明示的な)メソッドを介して変更可能.
     """
+
+    id: UserId = Field(frozen=True)
+    _name: UserName = PrivateAttr()
+    _email: MailAddress = PrivateAttr()
 
     def __init__(
         self,
@@ -29,26 +33,19 @@ class User:
         name: UserName,
         email: MailAddress,
     ):
-        # NOTE 型検査.これに引っかかるということはプログラムミスの可能性が高い.
+        # NOTE 型アサーション. これに引っかかるということはプログラムミスの可能性が高い.
         assert isinstance(id, UserId)
         assert isinstance(name, UserName)
         assert isinstance(email, MailAddress)
-        self._id: UserId = id
+        super().__init__(id=id)
         self._name: UserName = name
         self._email: MailAddress = email
-
-    # NOTE: getterのみ定義することでユーザIDをimmutableにしている
-    @property
-    def id(self) -> UserId:
-        return self._id
 
     @property
     def name(self) -> UserName:
         return self._name
 
-    # NOTE: ユーザ名は後から変更可能(mutable)にしている
-    @name.setter
-    def name(self, name: "UserName"):
+    def change_name(self, name: UserName):
         if not isinstance(name, UserName):
             raise TypeError("name is not an instance of UserName")
         self._name = name
@@ -57,9 +54,7 @@ class User:
     def email(self) -> MailAddress:
         return self._email
 
-    # NOTE: メールアドレスは後から変更可能(mutable)にしている
-    @email.setter
-    def email(self, email: "MailAddress"):
+    def change_email(self, email: MailAddress):
         if not isinstance(email, MailAddress):
             raise TypeError("email is not an instance of MailAddress")
         self._email = email
@@ -67,4 +62,8 @@ class User:
     def equals(self, user: "User"):
         if not isinstance(user, User):
             raise TypeError("user is not an instance of User")
-        return self._id.value == user.id.value
+        return self.id.value == user.id.value
+
+    def is_premium(self) -> bool:
+        # TODO 実装
+        return False

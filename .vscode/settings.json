@@ -20,7 +20,7 @@
   "remote.autoForwardPortsFallback": 0,
   "sqltools.connections": [
     {
-      "name": "ddd-book",
+      "name": "ddd-practice",
       "server": "localhost",
       "port": 15432,
       "driver": "PostgreSQL",
@@ -42,6 +42,7 @@
     "BUG",
     "HACK",
     "TODO",
-    "NOTE"
+    "NOTE",
+    "OPTIMIZE"
   ]
 }

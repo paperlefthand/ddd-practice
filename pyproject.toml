@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "ddd-book"
+name = "ddd-practice"
 description = "ドメイン駆動設計入門のPython版"
 package-mode = false
 
@@ -14,6 +14,7 @@ injector = "^0.21.0"
 pytest = "^8.1.2"
 ipykernel = "^6.29.4"
 pytest-cov = "^5.0.0"
+pytest-html = "^4.1.1"
 
 [build-system]
 requires = ["poetry-core"]
@@ -21,8 +22,8 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.pytest.ini_options]
 pythonpath = "src"
-addopts = "--cov --cov-branch -s -v"
-# addopts = "-v"
+addopts = "-s -v --cov=src --cov-branch --cov-report html"
+# addopts = "-v --cov-branch"
 testpaths = [
     "tests",
 ]

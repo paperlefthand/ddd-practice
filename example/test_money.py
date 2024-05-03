@@ -1,6 +1,7 @@
 import pytest
-from money import Money
 from pydantic import ValidationError
+
+from example.money import Money
 
 
 def test_init_validation_error():

@@ -1,14 +1,10 @@
-from logging import getLogger
-
+from application.user.mail_address import MailAddress
+from domain.models.user.iuser_factory import IUserFactory
+from domain.models.user.iuser_repository import IUserRepository
+from domain.models.user.user import UserName
+from domain.services.user_domain_service import UserDomainService
 from injector import inject
-from iuser_factory import IUserFactory
-from mail_address import MailAddress
 from pydantic import BaseModel
-from user import UserName
-from user_domain_service import UserDomainService
-from user_repository import IUserRepository
-
-logger = getLogger(__name__)
 
 
 class UserRegisterCommand(BaseModel, frozen=True):
@@ -17,6 +13,8 @@ class UserRegisterCommand(BaseModel, frozen=True):
 
 
 class UserRegisterService:
+    """ユーザの登録ユースケースを実現するアプリケーションサービス"""
+
     # NOTE コンストラクタインジェクションにより依存オブジェクトを注入
     @inject
     def __init__(
@@ -34,5 +32,6 @@ class UserRegisterService:
             email=MailAddress(value=command.email), name=UserName(value=command.name)
         )
         if self.user_domain_service.exists(user):
+            # HACK 重複の詳細はここではわからないので例外メッセージに発生原因を出力できないがそれでよいか.
             raise Exception("User already exists")
-        self.user_repository.save(user)
+        self.user_repository.save(user=user)

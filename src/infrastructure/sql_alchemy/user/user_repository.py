@@ -1,17 +1,19 @@
 from typing import Optional
 
+from application.user.mail_address import MailAddress
+from domain.models.user.iuser_repository import IUserRepository
+from domain.models.user.user import User, UserId, UserName
 from injector import inject
-from iuser_repository import IUserRepository
-from mail_address import MailAddress
 from sqlalchemy import Column, String
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
-from user import User, UserId, UserName
 
 Base = declarative_base()
 
 
 class SQLAlchemyUserRepository(IUserRepository):
+    # NOTE: sessionはwithコンテキストで管理する方法もあるが,
+    # あえてtry~catchで明示している
     @inject
     def __init__(self, session_factory: sessionmaker):
         self.session_factory = session_factory
@@ -24,6 +26,7 @@ class SQLAlchemyUserRepository(IUserRepository):
         email = Column(String(50))
 
     # TODO UserDataModelモデルからUserへ変換する関数
+    # TODO user_factoryの利用
 
     def find_by_name(self, name: "UserName") -> list["User"]:
         session = self.session_factory()

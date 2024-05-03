@@ -1,6 +1,6 @@
+from domain.models.user.iuser_repository import IUserRepository
+from domain.models.user.user import User
 from injector import inject
-from iuser_repository import IUserRepository
-from user import User
 
 
 class UserDomainService:

@@ -1,7 +1,7 @@
 import abc
 
-from mail_address import MailAddress
-from user import User, UserName
+from application.user.mail_address import MailAddress
+from domain.models.user.user import User, UserName
 
 
 class IUserFactory(abc.ABC):

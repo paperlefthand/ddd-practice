@@ -1,14 +1,15 @@
 import abc
 from typing import Optional
 
-from mail_address import MailAddress
-from user import User, UserId, UserName
+from application.user.mail_address import MailAddress
+from domain.models.user.user import User, UserId, UserName
 
 
 class IUserRepository(metaclass=abc.ABCMeta):
-    """ユーザリポジトリのインターフェース
-    リポジトリはユーザオブジェクトのライフサイクル(永続化,再構築,削除)の責務を負う
-    """
+    """ユーザリポジトリのインターフェース"""
+
+    # リポジトリはユーザオブジェクトのライフサイクル(永続化,再構築,削除)の責務を負う
+    # 実際のデータベース操作の詳細をサービスクラスから隠ぺいする. メソッド名は業務の関心事.
 
     @abc.abstractmethod
     def save(self, user: "User"):
@@ -19,7 +20,7 @@ class IUserRepository(metaclass=abc.ABCMeta):
         raise NotImplementedError(self.find_by_id)
 
     @abc.abstractmethod
-    def find_by_email(self, id: "MailAddress") -> Optional["MailAddress"]:
+    def find_by_email(self, email: "MailAddress") -> Optional["User"]:
         raise NotImplementedError(self.find_by_email)
 
     @abc.abstractmethod

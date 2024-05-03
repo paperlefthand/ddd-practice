@@ -1,11 +1,11 @@
 from logging import getLogger
 from typing import Optional
 
-from mail_address import MailAddress
+from application.user.mail_address import MailAddress
+from domain.models.user.iuser_repository import IUserRepository
+from domain.models.user.user import UserId, UserName
+from domain.services.user_domain_service import UserDomainService
 from pydantic import BaseModel
-from user import UserId, UserName
-from user_domain_service import UserDomainService
-from user_repository import IUserRepository
 
 logger = getLogger(__name__)
 
@@ -19,7 +19,7 @@ class UserUpdateCommand(BaseModel, frozen=True):
 
 
 class UserUpdateInfoService:
-    """ユーザ周りのアプリケーションサービス.ドメインオブジェクトのふるまいを呼び出す.
+    """ユーザ更新ユースケースを実現するアプリケーションサービス.ドメインオブジェクトのふるまいを呼び出す.
     - ドメインオブジェクトは直接公開せず,アプリケーションサービスを介して触らせる.
     - ドメインのルールはアプリケーションサービスではなくドメインオブジェクトに記述する.
       例: ドメインサービスのexistsを呼び出す(具体的な重複判定内容には踏み込まない)
@@ -34,6 +34,7 @@ class UserUpdateInfoService:
         self.user_domain_service: UserDomainService = user_domain_service
 
     def handle(self, command: UserUpdateCommand) -> None:
+        # HACK handleをトランザクション化したい
         target_id = UserId(value=command.id)
         user = self.user_repository.find_by_id(target_id)
         if not bool(user):
@@ -41,11 +42,11 @@ class UserUpdateInfoService:
 
         name = command.name
         if bool(name):
-            user.name = UserName(value=name)
+            user.change_name(UserName(value=name))
 
         email = command.email
         if bool(email):
-            user.email = MailAddress(value=email)
+            user.change_email(MailAddress(value=email))
 
         # NOTE 具体的な重複判定ロジックについては知らない
         if self.user_domain_service.exists(user):

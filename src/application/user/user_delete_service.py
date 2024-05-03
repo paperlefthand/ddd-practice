@@ -1,8 +1,8 @@
 from logging import getLogger
 
+from domain.models.user.iuser_repository import IUserRepository
+from domain.models.user.user import UserId
 from pydantic import BaseModel
-from user import UserId
-from user_repository import IUserRepository
 
 logger = getLogger(__name__)
 
