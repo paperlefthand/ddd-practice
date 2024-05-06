@@ -26,41 +26,43 @@ class User {
 }
 
 ' Domain Service
-class UserService {
+class UserDomainService {
     + exists(user : User) : boolean
 }
 
 ' Repository Interface
 interface IUserRepository {
     + save(user : User) : void
-    + get(userId : UserID) : User?
     + update(user : User) : void
     + delete(user : User) : void
-    + findById(userId : UserID) : User?
+    + find_by_id(userId : UserID) : User?
+    + find_by_name(userName : UserName) : [User]
 }
 
 Interface IUserFactory {
-    +create(name: UserName): User
+    +create(name: UserName, email: MailAddress): User
 }
 
 
 
 ' Application Service
-class UserApplicationService {
-    - repository : IUserRepository
-    + registerUser(userName : String, email : String) : UserID
-    + updateUser(userId : UserID, userName : String, email : String) : void
-    + deleteUser(userId : UserID) : void
+class UserRegisterService {
+    + user_repository : IUserRepository
+    + domain_service: UserDomainService
+    + user_factory: IUserFactory
 }
 
-UserFactory --> IUserFactory
-UserRepository --> IUserRepository
+UserFactory -u-> IUserFactory
+SQLAlchemyUserRepository -u-> IUserRepository
 
-UserApplicationService ..> IUserRepository : uses
-UserApplicationService ..> UserService : uses
+UserRegisterService ..> IUserRepository : uses
+UserRegisterService ..> UserDomainService : uses
+UserRegisterService ..> IUserFactory : uses
 
-UserService ..> User : uses
-UserService ..> IUserRepository : uses
+UserDomainService ..> User : uses
+UserDomainService ..> IUserRepository : uses
+
+IUserFactory ..> User : creates
 
 User o-- UserName
 User o-- UserId

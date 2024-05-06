@@ -2,8 +2,8 @@ import copy
 from typing import Optional
 
 from application.user.mail_address import MailAddress
+from domain.models.user.iuser_repository import IUserRepository
 from domain.models.user.user import User, UserId, UserName
-from domain.models.user.user.iuser_repository import IUserRepository
 
 
 class UserMockRepository(IUserRepository):

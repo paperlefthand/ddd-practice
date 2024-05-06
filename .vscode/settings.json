@@ -44,5 +44,9 @@
     "TODO",
     "NOTE",
     "OPTIMIZE"
-  ]
+  ],
+  "plantuml.diagramsRoot": "diagrams",
+  "plantuml.exportFormat": "svg",
+  "plantuml.exportOutDir": "diagrams",
+  "plantuml.exportSubFolder": false
 }

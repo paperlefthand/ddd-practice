@@ -25,6 +25,9 @@ class SQLAlchemyUserRepository(IUserRepository):
         name = Column(String(32))
         email = Column(String(50))
 
+        def __repr__(self):
+            return f"<User(id={self.id}, name={self.name}, email={self.email})>"
+
     # TODO UserDataModelモデルからUserへ変換する関数
     # TODO user_factoryの利用
 

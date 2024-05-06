@@ -20,7 +20,7 @@ class UserName(BaseModel, frozen=True):
 
 class User(BaseModel):
     """ユーザエンティティ
-    - ユーザIDはimmutable, ユーザ名とメールアドレスは(setterではなく明示的な)メソッドを介して変更可能.
+    - ユーザIDはimmutable, ユーザ名とメールアドレスはメソッドを介して変更可能.
     """
 
     id: UserId = Field(frozen=True)
@@ -46,6 +46,7 @@ class User(BaseModel):
         return self._name
 
     def change_name(self, name: UserName):
+        # NOTE: setterではなく"ユーザ名の変更"という自然な言葉を使う(ユビキタスを意識)
         if not isinstance(name, UserName):
             raise TypeError("name is not an instance of UserName")
         self._name = name
@@ -55,6 +56,7 @@ class User(BaseModel):
         return self._email
 
     def change_email(self, email: MailAddress):
+        # NOTE: setterではなく"メールアドレスの変更"という自然な言葉を使う(ユビキタスを意識)
         if not isinstance(email, MailAddress):
             raise TypeError("email is not an instance of MailAddress")
         self._email = email

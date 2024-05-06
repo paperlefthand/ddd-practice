@@ -1,12 +1,11 @@
-# %%
 from application.user.user_register_service import (
     UserRegisterCommand,
     UserRegisterService,
 )
 from domain.models.user.iuser_factory import IUserFactory
 from domain.models.user.iuser_repository import IUserRepository
-from infrastructure.sql_alchemy.user.user_factory import UserFactory
 from infrastructure.sql_alchemy.user.user_repository import SQLAlchemyUserRepository
+from infrastructure.user_factory import UserFactory
 from injector import Injector, Module, provider, singleton
 from sqlalchemy import Engine, create_engine
 from sqlalchemy.orm import sessionmaker
@@ -15,9 +14,10 @@ from sqlalchemy.orm import sessionmaker
 
 
 class InfrastructureModule(Module):
-    # インターフェースに対する具象クラスの引き当て
+    # NOTE: インターフェースに対する具象クラスの引き当て
+    # Singletonスコープのため,一度インスタンスが生成されたら使いまわされる
     def configure(self, binder):
-        binder.bind(IUserRepository, to=SQLAlchemyUserRepository)
+        binder.bind(IUserRepository, to=SQLAlchemyUserRepository, scope=singleton)
 
     @singleton
     @provider
@@ -37,13 +37,13 @@ class InfrastructureModule(Module):
 class ApplicationModule(Module):
     def configure(self, binder):
         binder.install(InfrastructureModule)
-        binder.bind(IUserFactory, to=UserFactory)
+        binder.bind(IUserFactory, to=UserFactory, scope=singleton)
 
 
 def main():
     injector = Injector(modules=[ApplicationModule()])
-    # NOTE: injectorを経由することで,
-    # bindやinstallで依存関係が設定されたUserRegisterServiceのインスタンスを取得できる.
+    # NOTE: injector(DIコンテナ)を経由することで,
+    # bindやinstallで指定した依存オブジェクトが設定されたUserRegisterServiceのインスタンスを取得できる.
     user_register_service = injector.get(UserRegisterService)
     result = user_register_service.handle(
         UserRegisterCommand(name="taro", email="zzz@mail.example.com")
